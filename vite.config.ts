@@ -2,10 +2,9 @@
 import { defineConfig, Plugin } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
-import { createServer } from "./server";
 
 export default defineConfig(({ mode }) => ({
-  base: "/Portfolio-website/",   // ADD THIS LINE
+  base: "/Portfolio-website/",   // must match repo name
   server: {
     host: "::",
     port: 8080,
@@ -17,7 +16,10 @@ export default defineConfig(({ mode }) => ({
   build: {
     outDir: "dist/spa",
   },
-  plugins: [react(), expressPlugin()],
+  plugins: [
+    react(),
+    ...(mode === "serve" ? [expressPlugin()] : []),  // only use in dev
+  ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./client"),
@@ -26,11 +28,14 @@ export default defineConfig(({ mode }) => ({
   },
 }));
 
+// Dev-only Express plugin
 function expressPlugin(): Plugin {
   return {
     name: "express-plugin",
     apply: "serve", 
     configureServer(server) {
+      // Import only during dev
+      const { createServer } = require("./server");
       const app = createServer();
       server.middlewares.use(app);
     },
