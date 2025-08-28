@@ -1,12 +1,11 @@
+// vite.config.ts
 import { defineConfig, Plugin } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { createServer } from "./server";
 
-// https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: "/Portfolio-website/", // required for GitHub Pages
-
+  base: "/Portfolio-website/",   // ADD THIS LINE
   server: {
     host: "::",
     port: 8080,
@@ -16,7 +15,7 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
-    outDir: "dist", // use dist (not dist/spa)
+    outDir: "dist/spa",
   },
   plugins: [react(), expressPlugin()],
   resolve: {
@@ -30,11 +29,9 @@ export default defineConfig(({ mode }) => ({
 function expressPlugin(): Plugin {
   return {
     name: "express-plugin",
-    apply: "serve", // Only apply during development (serve mode)
+    apply: "serve", 
     configureServer(server) {
       const app = createServer();
-
-      // Add Express app as middleware to Vite dev server
       server.middlewares.use(app);
     },
   };
