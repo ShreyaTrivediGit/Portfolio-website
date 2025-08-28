@@ -14,10 +14,14 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "deploy": "gh-pages -d dist",
     "test": "vitest --run",
     "format.fix": "prettier --write .",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+
+    
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist/spa",
+    "postbuild": "cp dist/spa/index.html dist/spa/404.html"
   },
   "dependencies": {
     "@radix-ui/react-icons": "^1.3.2",
